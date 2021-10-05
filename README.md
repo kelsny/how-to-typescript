@@ -147,7 +147,35 @@ Most of the times, however, you'll always use the standard syntax for defining o
 A type system without any operators to aid us in developing said types? Unheard of!
 Thankfully, TypeScript includes several operators to ease the use of type composition.
 
-<insert text>
+They're all pretty simple and intuitive, so I'll go through all of them extremely fast.
+
+**Union (`|`)**
+
+No, not bitwise OR! It's the union operator! A union is basically an OR operator. This thing can be this type, OR this type, OR this type, etc.
+Unions allow more flexibility (and some design patterns) for the type system to flourish.
+
+```ts
+type StringOrNumber = string | number;
+```
+
+**Intersection (`&`)**
+
+Again, it's not bitwise AND, it's the intersection operator. This operator takes two types and merges them, if it can (if it can't it'll produce `never`).
+Intersections allow the type system to have complex type compositions.
+
+**Type of something (`typeof`)***
+
+Ok, this one's like the JavaScript `typeof` operator, but it retrieves the inferred or explicitly defined type of a value.
+
+```ts
+import Module from "library";
+
+type TypeOfImportedThing = typeof Module;
+```
+
+**Is subtype (`extends`)**
+
+<>
 
 # Part 2 - The new horizon
 
