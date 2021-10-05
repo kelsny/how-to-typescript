@@ -2,6 +2,8 @@
 
 > People always ask, "How do you do your type magic stuff?", so I'm going to try and answer them.
 
+[Ew skip the boring sh\*t](#part-1)
+
 ### Foreword
 
 Ok, first I'd like to admit not everyone says "How do you do your type magic stuff?".
