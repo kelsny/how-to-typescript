@@ -163,6 +163,15 @@ type StringOrNumber = string | number;
 Again, it's not bitwise AND, it's the intersection operator. This operator takes two types and merges them, if it can (if it can't it'll produce `never`).
 Intersections allow the type system to have complex type compositions.
 
+```ts
+type Foo = { foo: string };
+type Bar = { bar: string };
+
+type FooAndBar = Foo & Bar;                    // { foo: string; bar: string }
+
+type ImpossibleIntersection = string & number; // is never
+```
+
 **Type of something (`typeof`)***
 
 Ok, this one's like the JavaScript `typeof` operator, but it retrieves the inferred or explicitly defined type of a value.
@@ -174,6 +183,31 @@ type TypeOfImportedThing = typeof Module;
 ```
 
 **Is subtype (`extends`)**
+
+This one isn't the `extends` like you use in a class, although it does relate to it in a way. No, `extends` can be used in one of 2 ways:
+- As a generic type constraint (you will see what I mean)
+- As a way to check if a type extends another type (if a type is a subtype of another type)
+
+This one takes a little more work to understand, so I'll leave it up to you if you want to learn all about it right now.
+
+Ok, that was the fundamentals, let's talk about a little more advanced types next.
+
+## Chapter 2 - Walking
+
+That was a nice review of the basics, now let's use them to create more complex types.
+
+#### Functions
+
+Wait... we haven't covered functions yet! How are we supposed to annotate and manipulate function types? Ay don't worry TypeScript got you covered!
+Let's first take a look at the basic syntax for annotating a function.
+
+```ts
+function foo(bar: string, baz: number): boolean {
+  return Number(bar) === baz;
+}
+```
+
+This simple function checks if a string is equal to a number numerically (side tangent: [Equality operators: Why I always use strict equal/not-equal](./tangents/equality.md)). and its parameters and return type are both annotated. Note that TypeScript could've inferred the return type here, and that explicitly annotating it is optional.
 
 <>
 
