@@ -8,9 +8,9 @@
 
 In this book I'm going to assume you know the following:
 
-- `JavaScript` - Fundamentals, ES6 features, and the standard library.
-- `TypeScript` - What it is, why use it, basic syntax.
-- `Node.js` - What it is, `global` and `process`, native modules' API.
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) - Fundamentals, ES6 features, and the standard library.
+- [TypeScript](http://www.typescriptlang.org/) - What it is, why use it, basic syntax.
+- [Node.js](https://nodejs.org/en/) - What it is, `global` and `process`, native modules' API.
 
 If you aren't quite caught up on these topics, do so now so that the book does not become confusing or overwhelming for you.
 I'd hate for someone to leave more confused than they started.
@@ -70,7 +70,7 @@ You could think of `unknown` as a type-safe version of `any`. This type is used 
 A common example would be user input or a request body in an API route. You have to narrow down the type before you use it, unlike `any`!
 `unknown` is used many times in type magic, because it has some useful properties we'll explore later.
 
-** `never`**
+**`never`**
 
 The `never` type is almost like the polar opposite of `any`.
 `never` cannot be assigned to anything (except for `never` itself), and everything can't be assigned to `never` (except for `never` itself yet again).
@@ -93,6 +93,61 @@ function iNeverReturn() {
 Since the process will be terminated, the function will never return anything.
 
 As we will see later, `never` also is extremely useful in type magic.
+
+**`void`**
+
+Finally, we have the `void` type. This type is inferred when the function does not explicitly return (or is supposed to return nothing, like `console.log`). Like `never`, it's selectively assignable. There's not much to this type, in my opinion, so we'll just gloss over it for now.
+
+#### Boxed Primitives
+
+JavaScript also includes boxed primitives. Boxed primitives are object representations of primitives. Wrappers, if you will.
+When you call a method on a primitive like a string, the string is temporarily wrapped in an object, then the object's method is called.
+After that, the object is discarded and forgotten.
+
+```js
+const primitive = "hello world";         // string
+
+const boxed = new String("hello world"); // String
+
+const constructor = String;              // StringConstructor
+```
+
+Keep in mind that there is a *really* big difference between a primitive, boxed primitive, and the boxed primitive constructor's types.
+A primitive is lowercase (`string`), boxed primitive is capitalized (`String`), and the constructor has `Constructor` appended to it (`StringConstructor`).
+
+There is a small difference with user-defined classes, however, and we'll get to that soon.
+
+Like `any`, there is almost no reason to use the boxed primitive (constructor) type either, because using both `string` and `String` will lead to some pretty confusing and hard-to-find errors.
+
+#### Object types
+
+What's the use of a JavaScript type system if you can't define types for objects?
+
+The syntax for defining object types is very similar to vanilla JavaScript:
+
+```ts
+type MyType = {
+  foo: string;
+  bar: number;
+  baz: {
+    qux: boolean;
+  }
+}
+```
+
+There is also the `object` type, which is also pretty taboo like `any`, because most things can be assigned to it.
+Another one like `object` is `{}`. And also like primitives, there is `Object` and `ObjectConstructor`.
+
+You *might* yse `ObjectConstructor` because of `Object`'s built-in methods, for example, `Object.entries` (in types, `ObjectConstructor["entries"]`).
+
+Most of the times, however, you'll always use the standard syntax for defining object types.
+
+#### Operators
+
+A type system without any operators to aid us in developing said types? Unheard of!
+Thankfully, TypeScript includes several operators to ease the use of type composition.
+
+<insert text>
 
 # Part 2 - The new horizon
 
