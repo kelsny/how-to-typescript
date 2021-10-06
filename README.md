@@ -387,8 +387,35 @@ Mapped types come in handy a few times, make sure to practice them yourself!
 
 Ahh. We've been waiting for this one, haven't we? The infamous generics, notoriously hard to first understand, to grasp the concept and uses of this feature.
 
-I'll first give you the most common example: trying to add floats/ints/doubles in Java/C++ using only one method/function.
-Uh... right, JavaScript doesn't have number data types... <>
+I'll first give you the most common example: trying to generalize a class to work with many types (probably data structures).
+For example, a stack or queue. You can easily implement this in JavaScript/TypeScript:
+
+```ts
+class Stack {
+  private array: any[] = [];
+  
+  constructor(...items: any[]) {
+    this.array.push(...items);
+  }
+  
+  push(item: any) {
+    return this.array.push(item);
+  }
+  
+  pop() {
+    return this.array.pop();
+  }
+}
+```
+
+Unfortunately, we have almost no choice but to use a taboo type like `any` (`unknown` will be very annoying to work with).
+
+We *could* make a specialized class only for numbers, strings, booleans, etc, but that's very inefficient, and how would the user define their own classes without creating one from scratch?
+We can't make a factory function either... that would require generics.
+
+Which is why generics exist (no, not so we can make factory functions); so we can *generalize* something, whether it be a class, function, or interface.
+
+The syntax for defining generics is much like Java. <>
 
 # Part 2 - The new horizon
 
