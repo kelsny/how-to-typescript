@@ -415,7 +415,116 @@ We can't make a factory function either... that would require generics.
 
 Which is why generics exist (no, not so we can make factory functions); so we can *generalize* something, whether it be a class, function, or interface.
 
-The syntax for defining generics is much like Java. <>
+The syntax for defining generics is much like Java. Use angle brackets, with the generic parameters in between them (TypeSript does not have the [diamond operator](https://en.wikipedia.org/wiki/Generics_in_Java#Diamond_operator)).
+
+```ts
+class Stack<T> {
+  private array: T[] = [];
+  
+  constructor(...items: T[]) {
+    this.array.push(...items);
+  }
+  
+  push(item: T) {
+    return this.array.push(item);
+  }
+  
+  pop() {
+    return this.array.pop();
+  }
+}
+```
+
+Just like that we have a class that can now support any type.
+And we can also restrict the objects that this class will hold:
+
+```ts
+class Stack<T extends { id: number; }> {
+  private array: T[] = [];
+  
+  ...
+}
+```
+
+Let's take a look at another common example: the hashmap.
+Maps hold keys that *map* to a value.
+In Java, we have `Map<K, V>`, where `K` is the key's type and `V` is the value's type.
+TypeScript is exactly the same:
+
+```ts
+const map = new Map<string, number>([
+  ["key", 123],
+]);
+
+map.get("key"); // returns number
+```
+
+Generics also apply to interfaces:
+
+```ts
+interface StackLike<T> {
+  push(item: T): number;
+  pop(): T;
+}
+```
+
+And of course, we can still use `extends` to constrain the types:
+
+```ts
+interface StackLike<T extends { id: number }> {
+  push(item: T): number;
+  pop(): T;
+}
+```
+
+Lastly, generics also apply to functions.
+I'll only give the basic syntax for defining a generic function.
+The rest I leave to you, to experiment and discover the quirks and syntax for overloads.
+
+```ts
+function genericFn<T, Foo extends Constraint>(arg1: T, arg2: Foo): T | Foo { ... }
+```
+
+## Chapter 4 - Sprinting
+
+The last chapter of review. What shall I cover here?
+I chose extra things that aren't necessary, but could help you debug or develop faster.
+Let's get started right away.
+
+#### The `declare` keyword
+
+When you're rapidly prototyping types, you might have to declare a few types, variables, or functions so you can properly test your types.
+However, some implementations or complex structures for variables might slow you down. What can you do to prevent this?
+Declaring *only* their types, so you do not have to spend time on actually making them work (i.e. don't have to write code to make the function do something).
+
+This is possible with the `declare` keyword.
+`declare` is a special keyword with many uses, including [Module Augmentation](typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation), but here we'll use it as a great way to tell TypeScript that some things are defined.
+
+Firstly, let's use it to easily define a variable of a complex type.
+
+```ts
+type MightBeNested<T> = (T | MightBeNested<T>)[];
+```
+
+Here we have a complex type, a "might-be-nested" array of "might-be-nested" arrays.
+You could define a variable with filler/dummy data, but that's slow and inefficient.
+Instead, we can use `declare` to just declare that there is a variable of this type.
+
+```ts
+declare const augmentedVariable: MightBeNested<number>;
+
+console.log(augmentedVariabled); // in runtime (strict mode), this will give an error since augmentedVariable is not actually defined
+```
+
+There is no variable defined here, but since we have used `declare`, TypeScript *thinks* there is a variable named `augmentedVariable`.
+
+Extending this to functions:
+
+```ts
+declare function complexFn(arg1: Foo, arg2: Bar): Baz;
+```
+
+See? Now you don't need to worry about the function's implementation so the types match.
 
 # Part 2 - The new horizon
 
