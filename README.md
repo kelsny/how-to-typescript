@@ -142,6 +142,12 @@ You *might* yse `ObjectConstructor` because of `Object`'s built-in methods, for 
 
 Most of the times, however, you'll always use the standard syntax for defining object types.
 
+#### Literal types
+
+Small thing to note here: `"any-string-possible"` is a valid type. `0` is a valid type. 
+In fact, all primitive literals are a valid type (except for a few, like `Infinity` and `NaN`).
+So when you see me using literals, I'm probably using them as a type literal.
+
 #### Operators
 
 A type system without any operators to aid us in developing said types? Unheard of!
@@ -209,7 +215,176 @@ function foo(bar: string, baz: number): boolean {
 
 This simple function checks if a string is equal to a number numerically (side tangent: [Equality operators: Why I always use strict equal/not-equal](./tangents/equality.md)). and its parameters and return type are both annotated. Note that TypeScript could've inferred the return type here, and that explicitly annotating it is optional.
 
-<>
+The type of this function expressed in a function expression type would be `(bar: string, baz: number) => boolean`. Pretty straight-forward.
+
+What about a method on an object? TypeScript would show you the type (in a tooltip) as a function expression type. For defining an object type with a method, you've got two ways.
+
+```ts
+type MyObj = {
+  foo(param1: string, param2: string): string;
+  bar: () => number;
+};
+```
+
+There's two different ways, because we've got two different functions (plain and arrow). Note that `() => ...` does not represent an arrow function.
+Both ways are simply expressing a method on an object.
+
+Since JavaScript is such a hot mess of a language, you can change the `this` value of a function (`bind`, `call`, `apply`)!
+But how do you model this with TypeScript? 
+TypeScript allows you to annotate the `this` type using `this` as the first parameter in a function:
+
+```ts
+type Binded = (this: { foo: string }) => void;
+```
+
+Now when a function's type is marked as `Binded`, TypeScript will pretend `this` is `{ foo: string }`.
+
+Another small thing, when using literal function types with operators, you must wrap them in parentheses:
+
+```ts
+type UnionOfFns = () => void | () => never;     // ! ERROR
+type UnionOfFns = (() => void) | (() => never); // ^ Good!
+```
+
+#### Arrays and tuples
+
+Ah wait. Even if arrays are just special objects, they deserve their own way to define them as types...
+
+You might be familiar with array types in other languages. For example, in Java, to create an array of length 10 with only integers:
+
+```java
+int[10] myArray;
+```
+
+Or maybe even just
+
+```java
+int[] myArray;
+```
+
+to declare an array.
+
+Multi-dimensonal arrays follow from this, of course: `int[][]`.
+
+Some languages also support tuples, namely Python. TypeScript supports ways to represent both of these important structures;
+
+Array types are declared in the same fashion as Java.
+
+```ts
+type AliasForStringArray = string[]
+```
+
+Multi-dimensional
+
+```ts
+type Array2D = number[][]
+```
+
+Now for something that might blow you statically typed compiled language people's minds.
+
+It's important to think about `[]` as an *operator*. It takes its operand on the left and wraps it as an array type. In this way, we can compose complex array types:
+
+```ts
+type AReallyComplexArrayType = { key: ((string | number)[] & { depth: number })[] }[]
+```
+
+Note the use of parentheses; `(string | number)[]` is definitely not the same as `string | number[]`.
+
+Tuples are declared in a different fashion. They look like array literals in code, but instead of values, its types in their place.
+
+```ts
+type Position = [number, number];
+```
+
+You can also name each element:
+
+```ts
+type Position = [x: number, y: number];
+```
+
+Which is extremely useful to abuse when using dark type magic.
+
+In the next section we'll explore modifiers for arrays and tuples.
+
+#### Modifiers
+
+Alright so we've got a way to represent almost every type possible in JavaScript, now it's about flexibility and more accurate modeling of some JavaScript objects.
+We'll first start of with some extra operators, then finish it off with some more advanced types.
+
+**`keyof`**
+
+The `keyof` operator simply takes its only operand, and outputs a union of its keys. For example, `keyof { foo: string }` gives me `"foo"`, while `keyof { foo: string; bar: string }` gives me `"foo" | "bar"`.
+Not much by itself, but it can be used with another cool thing TypeScript allows us to do, which we'll see very soon.
+
+**`readonly`**
+
+Yep. We've got `readonly`. You can make any object readonly just with this special keyword. It can be an object's property, the object itself, arrays, etc.
+
+```ts
+type ReadonlyFoo = { readonly foo: string; bar: number };
+
+type ReadonlyArrayOfNumbers = readonly number[];
+```
+
+You can do some experimentation to see what's up and how it works (hint: there is a difference between making a value readonly and a property readonly).
+
+**`?`**
+
+?. What's this? I should give more context.
+Prefix `:` in an object after a key with `?` to make it optional.
+In older versions of TypeScript, this was equivalent to adding `| undefined` to the type of the key.
+
+```ts
+type OptionalProp = {
+  foo?: string;
+};
+```
+
+**`-`**
+
+Oh another weird symbol? What's *this* one for?
+I'll answer that. It's for removing `?` and `readonly` in an object. We'll see how this can be used in the next one.
+
+**`in`**
+
+Alas, we have `in`, which allows us to create mapped types.
+Personally, I think mapped types are a little badly named.
+But basically, they're called mapped types because the type is computed by mapping a key to a type.
+
+```ts
+type MappedNumbers = {
+  [K in "foo" | "bar"]: number;
+}; // { foo: number; bar: number }
+```
+
+We can also use `keyof` here:
+
+```ts
+type FooBar = { foo: string; bar: string };
+
+type MappedNumbers = {
+  [K in keyof FooBar]: number;
+};
+```
+
+Along with `-` to remove optionality of properties, as well as readonly-ness (?):
+
+```ts
+type FooBar = { readonly foo: string; readonly bar: string };
+
+type RequiredFooBar = {
+  -readonly [K in keyof FooBar]-?: string;
+};
+```
+
+Mapped types come in handy a few times, make sure to practice them yourself!
+
+## Chapter 3 - Running
+
+Ahh. We've been waiting for this one, haven't we? The infamous generics, notoriously hard to first understand, to grasp the concept and uses of this feature.
+
+I'll first give you the most common example: trying to add floats/ints/doubles in Java/C++ using only one method/function.
+Uh... right, JavaScript doesn't have number data types... <>
 
 # Part 2 - The new horizon
 
