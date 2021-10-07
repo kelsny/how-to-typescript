@@ -531,8 +531,8 @@ See? Now you don't need to worry about the function's implementation so that the
 ## Chapter 5 - Look the other way
 
 Congratulations! You've either made it here or skipped the first part!
-Ok, ok, so you think you know TypeScript types fairly well, after all, you're practically following every word.
-Guess what? It was a prank! Happy April fools, fool!
+Ok, ok, so you think you know TypeScript types fairly well, after all, you're practically following my every word.
+Guess what? It was a prank! Happy April Fools, fool!
 
 To properly learn the art of type magic/abuse, you have to think about types in a different way.
 And that, much, much, much different way is to think of types just like code.
@@ -717,6 +717,56 @@ Now why is this useful? Because you can limit what your endusers input into your
 TypeScript is all about type safety, so we should be able to create custom string types to suit our design decisions.
 
 Let's use this to create a type that checks if a string is numerical (i.e. checks if the string can be turned into a number using `Number`).
+
+```ts
+type IsNumerical<S extends string> =  S extends `${bigint}` ? true : false;
+```
+
+Here, we use `extends string` to make sure `S` is a string. Then we use a conditional type along with a template literal that includes a `bigint`.
+Time to test!
+
+```ts
+type T0 = IsNumerical<"123">;
+type T1 = IsNumerical<"123.123">;
+type T2 = IsNumerical<123>;
+type T3 = IsNumerical<true>;
+```
+
+Pretty nice, if I do say so myself (and I do).
+
+## Chapter 8 - Make Inferences
+
+TypeScript has conditional operators, which already allow us to do many, many cursed things. For example, you can make it do basic arithmetic (we will make this in the next chapter).
+But for TypeScript's type system to be even more useful, it should be able to be told when to infer and what to do with the inferred type.
+For this functionality, there is the `infer` keyword.
+
+The `infer` keyword does exactly what it sounds like. It infers types. As a really simple example, let's recreate the utility type `ReturnType`.
+
+First, define the type:
+
+```ts
+type ReturnType<F> = F;
+```
+
+Constrain `F` to only functions:
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F;
+```
+
+We'll use `any` here because it can represent any type, which we want, in this case. Now... we'll use a conditional type.
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => any ? F : F;
+```
+
+We notice that `F extends (...args: any[]) => any` will always be false (since `F` is already constrained to that type), so we put `never` as the type if false:
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => any ? F : never;
+```
+
+But how do we infer the return type? It's annotated as `any` right now. <>
 
 # Part 3 - Design & Develop
 
