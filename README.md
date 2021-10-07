@@ -1,8 +1,3 @@
----
-layout: default
-title: How to TypeScript
----
-
 English · [中文](./translations/zh)
 
 Formal · [Informal](./styles/informal) · [Uncensored](./styles/uncensored)
