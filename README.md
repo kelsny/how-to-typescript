@@ -524,13 +524,199 @@ Extending this to functions:
 declare function complexFn(arg1: Foo, arg2: Bar): Baz;
 ```
 
-See? Now you don't need to worry about the function's implementation so the types match.
+See? Now you don't need to worry about the function's implementation so that the types match.
 
 # Part 2 - The new horizon
 
+## Chapter 5 - Look the other way
+
+Congratulations! You've either made it here or skipped the first part!
+Ok, ok, so you think you know TypeScript types fairly well, after all, you're practically following every word.
+Guess what? It was a prank! Happy April fools, fool!
+
+To properly learn the art of type magic/abuse, you have to think about types in a different way.
+And that, much, much, much different way is to think of types just like code.
+What do I mean by that?
+
+Take a look:
+
+```ts
+type MightBeNested<T> = (T | MightBeNested<T>)[];
+
+// think of this type as a function like this
+
+function MightBeNested(T) {
+  return (T | MightBeNested(T))[];
+}
 ```
-// The new way to look at types
+
+This "function" takes a parameter `T` and returns `(T | MightBeNested(T))[]`. In other words, it's **recursive**, just like the type.
+In type magic, recursion is heavily used/optimized in the form of tail recursion (see: [TCO](https://en.wikipedia.org/wiki/Tail_call)).
+When you abuse types, you should almost always think of them as a function, like this.
+It even helps to write them first as a function (limited in syntax and features, of course), then convert it to a type.
+
+## Chapter 6 - On one condition...
+
+So far, pretty cool. Types can be thought of as simple recursive functions.
+
+You've probably heard TypeScript's types are Turing complete, so... where's the Turing complete-ness?
+
+**Enter: conditional types.**
+
+Conditional types are very much like plain old ternary operators. They have three operands: a condition, type if true, type if false.
+This is similar to a ternary, except it uses expressions instead of types.
+
+Conditional types are always in the form `SubType extends SuperType ? TypeIfTrue : TypeIfFalse`.
+
+As a simple example to get you comfortable with reading this, we'll make a simple type that gives us `true` if the parameter extends `string`, and false otherwise.
+To start, create the type:
+
+```ts
+type IsString<T> = T;
 ```
+
+Check if it extends `string`:
+
+```ts
+type IsString<T> = T extends string;
+```
+
+We're not done yet. Unlike normal JavaScript even if we want to return a boolean, we have to explicitly include the boolean values:
+
+```ts
+type IsString<T> = T extends string ? true : false;
+```
+
+Yes, I know, it's repetitive if you need to do this a lot. Hopefully someday this will be a feature of TypeScript (at least a compiler option).
+And just like that, we've created our first conditional type, albeit much more useless than what conditional types can really do.
+Let's test it now.
+
+```ts
+type T0 = IsString<string>;              // true
+type T1 = IsString<"yes i am a string">; // true
+type T2 = IsString<number>;              // false
+type T3 = IsString<123>;                 // false
+```
+
+Nice, seems to work!
+
+Since conditional types, are again, much like ternaries, you can chain/nest them.
+
+Chaining:
+
+```js
+condition1 ? expr1 : condition2 ? expr2 : expr3
+```
+
+Nesting:
+
+```js
+condition1 ? condition2 ? expr1 : expr2 : expr3
+```
+
+Or you can even do both at once (really hard to read, use if-elif-else instead).
+Note that chaining represents an OR operator if you chain it like this:
+
+```js
+condition1 ? true ? condition2 ? true : false
+```
+
+Likewise, nesting represents an AND operator if you nest them like this:
+
+```js
+condition1 ? condition2 ? true : false : false
+```
+
+Keep these in mind, since they will be extremely useful later, when we practice logic gates with conditional types.
+
+## Chapter 7 - Template for rest
+
+Template literals have probably been one of the most exciting and innovative features to come to JavaScript, along with the spread/rest operator.
+Which is why TypeScript also supports them in types:
+
+```ts
+type UseBackticks = `hello world!
+new lines
+are supported, too\
+ can also escape them`;
+
+type MyArrayType = [1, 2, 3];
+
+type CloneOfMyArrayTypeUsingTheSpreadOperator = [...MyArrayType];
+```
+
+Spread operators are used often in recursive types, since most recursive type abuse needs to accumulate data (side tangent: [Is Type Abuse a Good Way to Learn Functional Programming](./tangents/fp.md)). They're actually really intuitive to use, and I'm pretty sure you can do some digging yourself on this one.
+
+Template literals however, are a big mess. Not in the sense of inconsistency and unintuitive-ness, but in the grander sense that it has so many different uses and features.
+If I were to write an article about template literals, it would probably be longer than all volumes of Harry Potter combined, and in fact, there is an article about template literals... not that long but still extremely long.
+That's why I'll only cover the things you absolutely need to know to get started with abusing types.
+
+First, the actual templating part. In the first example, I only used backticks to replace quotes and newlines, which I've got to admit, not a fair and effective usage of them.
+To not be really confusing when introducing this, I'll only put type literals inside templates, so it looks just like JavaScript, like so:
+
+```ts
+type Hello123 = `Hello${123}`;
+```
+
+Wonderful. Works *just* like regular template literals. Same goes for any type that can be interpolated with a string (*cough* symbols *cough*).
+Ok, now for something that blew my mind at first... putting a f\*cking type in there instead (and yes, this is where I curse a lot more).
+
+```ts
+type HelloWithAnyNumber = `Hello${number}`;
+```
+
+Right. Crazy. But what does this actually do? Well it allows any string that starts with `"Hello"` and ends with a number.
+
+Some examples:
+
+- `Hello123`
+- `Hello0`
+- `Hello0.0`
+- `Hello0.123`
+- `Hello123.123`
+
+What if I but `string` instead of `number`?
+You guessed it. I can put any string after the `Hello`:
+
+- `HelloWorld`
+- `Hello world`
+- `Hello`
+
+Make sure you see why these work.
+Now for boolean, right, you can only have `Hellotrue` or `Hellofalse`.
+
+Ok, interesting. What about... a union of types...
+
+Let's first try `string | number`.
+
+Hmm, it  appears now, I can put any string or number after `Hello`.
+
+Pretty much expected, if you ask me. What's more interesting is putting a union of literal types.
+
+For example:
+
+```ts
+type HelloPeople = `Hello ${"Alice" | "Bob" | "Charlie"}`
+```
+
+What's `HelloPeople`?
+
+I'll wait until your mouth is not open anymore.
+
+...
+
+Yes! I know! TypeScript automagically created a union of `Hello Alice`, `Hello Bob`, and `Hello Charlie`.
+
+This is an important pattern where you can use TypeScript to generate similar string unions for you.
+
+Fireship has made an amazing YouTube short detailing this [here](https://www.youtube.com/watch?v=5JqzCjg4YRU) (must watch).
+
+Insane. You would never fathom that this would be possible in TypeScript before template literals.
+
+Now why is this useful? Because you can limit what your endusers input into your library or API.
+TypeScript is all about type safety, so we should be able to create custom string types to suit our design decisions.
+
+Let's use this to create a type that checks if a string is numerical (i.e. checks if the string can be turned into a number using `Number`).
 
 # Part 3 - Design & Develop
 
@@ -545,5 +731,7 @@ See? Now you don't need to worry about the function's implementation so the type
 ```
 
 ### Afterword
+
+### Acknowledgements
 
 ### Contributing
