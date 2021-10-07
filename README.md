@@ -1,6 +1,6 @@
 **Translations:** [中文](./translations/zh)
 
-**Styles:** [Informal](./styles/informal)
+**Styles:** [Uncensored](./styles/uncensored) [Informal](./styles/informal)
 
 # How to TypeScript
 
