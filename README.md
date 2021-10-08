@@ -766,7 +766,30 @@ We notice that `F extends (...args: any[]) => any` will always be false (since `
 type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => any ? F : never;
 ```
 
-But how do we infer the return type? It's annotated as `any` right now. <>
+But how do we infer the return type? It's annotated as `any` right now.
+With the `infer` keyword, of course. It always goes like this: `infer Identifier`, where `Identifier` is the inferred type.
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? F : never;
+```
+
+Like this, TypeScript will say, "Hey, there's something I need to infer. I'll store what I think in `R`." Now we can use `R`, the result of TypeScript's inference.
+Note that you can only used the identifier only after the `?`. It will not be defined in the "type-if-false" clause.
+For example, this is not correct:
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? F : R;
+```
+
+`R` is not defined after the `:`, so this gives us an error.
+
+However, this is correct, syntactically and logically (what we want):
+
+```ts
+type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? R : never;
+```
+
+<>
 
 # Part 3 - Design & Develop
 
