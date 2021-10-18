@@ -789,6 +789,53 @@ However, this is correct, syntactically and logically (what we want):
 type ReturnType<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? R : never;
 ```
 
+You can read this as English if you want. "If F extends a function, infer its return type, otherwise, `never`".
+
+Since the inferred type is now an identifier we can use... We can check if it extends another thing as well.
+Let's use this to create a type, `ReturnTypeExtendsFoo`, which will check if the function's return type extends, well, `Foo`.
+
+```ts
+type ReturnTypeExtendsFoo<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? R extends Foo ? true : false : false;
+```
+
+Now let's read this again. "If F extends a function, infer its return type. If the inferred return type extends Foo, true, otherwise, false. If F is not even a function, false."
+Wait a minute... This kinda sounds like `ReturnType` with an extra step after we infer the return type. Well yes, because you can also express this type as
+
+```
+type ReturnTypeExtendsFoo<F extends (...args: any[]) => any> = ReturnType<F> extends Foo ? true : false;
+```
+
+I just wanted to show you that the inferred type can be used just like a generic parameter :)
+
+Alright so we can infer function return types... Can we do parameters? Why yes, of course we can.
+Can you guess what's the syntax to do so?
+
+Hm, let's see... To make it work with functions, instead of putting a plain old type as the return type, we slapped in `infer SomeIdentifier` instead.
+In function parameter type annotations, the syntax is `(arg0: Type, arg1: Type)` or `(...args: SomeTupleOrArrayType)`. Let's try this again.
+We'll replace the type with `infer SomeIdentifier` again.
+
+```ts
+type GimmeYourParameters<F extends (...args: any[]) => any> = F extends (...args: infer ArgTypes) => any ? ArgTypes : never;
+```
+
+Wow! It actually worked! As you can probably guess, it works the same for singular parameters.
+
+```ts
+type GimmeYourFirstParameter<F extends (...args: any[]) => any> = F extends (arg: infer ArgType) => any ? ArgType : never;
+```
+
+Nice! But hey, what's the fun in *only* inferring types of functions? Fortunately, we can do the same to strings and arrays.
+Let's talk about strings first. Arrays have a bit more magic in them than you might think.
+
+## Chapter 9 - Abusing inferences
+
+Alright, out with it, what do you think we can do with `infer`? What's the most cursed, abusive, and imaginative way, you can *possibly* use `infer`?
+
+To me, the first thing that comes to mind, are parsers. Made entirely out of TypeScript types, and only out of TypeScript types. Literal, f\*cking parsers.
+You name it. JSON parsers, YAML parsers, Markdown parsers, DSL parsers, text parsers, CSV parsers... Anything that can be parsed, can be parsed in TypeScript types.
+
+So hopefully that's got you a little excited about `infer`. Now let's actually see *how* you can do the same.
+
 <>
 
 # Part 3 - Design & Develop
