@@ -836,6 +836,102 @@ You name it. JSON parsers, YAML parsers, Markdown parsers, DSL parsers, text par
 
 So hopefully that's got you a little excited about `infer`. Now let's actually see *how* you can do the same.
 
+Let's say we want to get a set of all the characters in a string. In plain JS, we'd probably do something like this:
+
+```js
+function GetChars(string) {
+  return [...new Set(string.split(""))];
+}
+```
+
+And, since a union of the same type evaluates to that type,
+
+```ts
+type UnionActsLikeASet = "foo" | "bar" | "foo"; // => "foo" | "bar"
+```
+
+unions act like a set, in a way.
+
+Now, let's go back to template literals. Notice that we can do something like this:
+
+```ts
+type ABC = "a" | "b" | "c";
+
+type StartsWithABC<S extends string> = S extends `${ABC}${string}` ? true : false;
+```
+
+Ok, if you remember correctly, `infer` is like a drop-in replacement for a type we want to infer...
+And guess what, it works exactly the same here as well! Props to the designers of TypeScript for making `infer` pretty simple to use across many situations!
+
+```ts
+type ABC = "a" | "b" | "c";
+
+type StartsWithABC<S extends string> = S extends `${ABC}${string}` ? S extends `${infer Letter}${string}` ? Letter : never : false;
+```
+
+Woah, not only can we tell if a string starts with a, b, or c, we can actually tell *which* one it was!
+Notice that I have put `never` in there, since `Letter` will *never* not be inferred, since S must start with a, b, or, c.
+Nice, nice, we can do some magic now. We can infer a letter in a string which is pretty cool, so now let's use it to get a set of all the characters in a string.
+
+```ts
+type GetChars<S extends string> = S extends `${infer Letter}${infer Rest}` ? ... : ...;
+```
+
+Ayo! What's this new fangled thing here? TWO `infer`'s? Ah don't worry.
+When it's used like this, `Letter` will be a single character, and `Rest` will be the rest of the string.
+This way, there is no ambiguity involved and it flows pretty smoothly.
+
+We've got the first character and rest of the string now, what do we do with them?
+We want a set, so let's put a union of Letter in: 
+
+```ts
+type GetChars<S extends string> = S extends `${infer Letter}${infer Rest}` ? Letter | ... : ...;
+```
+
+What should the operands be? Well, since `GetChars` will evaluate to a union of letters, we can use this property, and stick it in like so:
+
+```ts
+type GetChars<S extends string> = S extends `${infer Letter}${infer Rest}` ? Letter | GetChars<Rest> : ...;
+```
+
+Note that it is `GetChars<Rest>`, not `GetChars<S>`. We want to get the characters for the rest of the string, not the current one.
+Otherwise, it'll go into an infinite loop!
+
+Hold your horses! What on earth goes at the end?
+Well, following the earlier logic of no ambiguity, if the string does not extend `${infer Letter}${infer Rest}`, that must mean the string is empty.
+If the string has one character, `Letter` will take on that character and `Rest` will be empty.
+Knowing this, we can put `never` there, since `never | AnythingElse` evaluates to `AnythingElse` (check it yourself!).
+
+```ts
+type GetChars<S extends string> = S extends `${infer Letter}${infer Rest}` ? Letter | GetChars<Rest> : never;
+```
+
+And that's `GetChars` done! Play with it in the playground for a while, experiment with different strings and implementations.
+You'll probably find that large strings make it incredibly slow, and I'll explain why and how to solve this in Part 3.
+
+Ok, before we move on to inferring tuples/arrays, let's take a moment to talk about how infer works in strings.
+I had so much time on my hands, I made a simple graphic in ASCII:
+
+```txt
+`${infer T}${infer R}`
+example string
+_ --- T
+ _____________ --- R
+ 
+`${infer T}inbetween${infer R}`
+example inbetween string
+________ --- T
+           R --- _______
+           
+`ahead${infer T}inbetween${infer R}`
+ahead example inbetween string
+     _________ --- T
+                 R --- _______
+```
+
+That should explain most of it. If you are using more than two `infer`'s to parse something, these rules should still apply.
+I think it's best for you to play around with this until you're familiar with some of the edge cases and behaviour dealing with `infer` in template literals.
+
 <>
 
 # Part 3 - Design & Develop
