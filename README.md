@@ -825,7 +825,7 @@ type GimmeYourFirstParameter<F extends (...args: any[]) => any> = F extends (arg
 ```
 
 Nice! But hey, what's the fun in *only* inferring types of functions? Fortunately, we can do the same to strings and arrays.
-Let's talk about strings first. Arrays have a bit more magic in them than you might think.
+Let's talk about strings first, since they might have a little more magic than you may think (arrays do, too, but I think their magic isn't as handy :D).
 
 ## Chapter 9 - Abusing inferences
 
@@ -932,7 +932,53 @@ ahead example inbetween string
 That should explain most of it. If you are using more than two `infer`'s to parse something, these rules should still apply.
 I think it's best for you to play around with this until you're familiar with some of the edge cases and behaviour dealing with `infer` in template literals.
 
-<>
+Yay time for the last part of `infer` 👏! Now we'll discuss tuples and arrays. For the most part, it's pretty much the same.
+
+Recall that using `infer`, you simply replace the type with `infer AnIdentifier`. So, how does that look in tuples and arrays?
+
+```ts
+type InferArray<A extends any[]> = A extends (infer T)[] ? T : never;
+```
+
+Well... that's a useless type, but you can still see how it can infer the type of the array.
+
+That's pretty much it for arrays. Onto tuples (which is, safe to say, far mor exciting)!
+If you're familiar with tuples, you probably know how to make one that contains one element:
+
+```ts
+[MyType]
+```
+
+You know what time it is? `infer` time! Drop that sucker in and it'll work straight away!
+
+```ts
+[infer T]
+```
+
+Right that's cool, what about variable length tuples:
+
+```ts
+[number, ...number[]]
+```
+
+Well... turns out it's exactly the same! Keep in mind that the type to replace here is `number[]`, not `number`!
+
+```ts
+[number, ...infer Rest]
+```
+
+Wow! So simple!
+
+And that's it for arrays. Nothing too complicated.
+But you can take `infer` to greater heights.
+
+You can, for example, literally use `infer` anywhere in place of a type... including object property types.
+
+```ts
+type InferProp<O> = O extend { foo: infer Bar } ? Bar : never;
+```
+
+I'll leave you with this new information to play around with! It's a lot to take in if you aren't used to it.
 
 # Part 3 - Design & Develop
 
