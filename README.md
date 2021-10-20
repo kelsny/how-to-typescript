@@ -1002,4 +1002,16 @@ I'll leave you with this new information to play around with! It's a lot to take
 
 ### Acknowledgements
 
+- [Me](https://github.com/cursorsdottsx/) - is that how this works?
+- [Cassie](https://github.com/BobobUnicorn/)
+- [Okku](https://github.com/0kku/)
+- [aero](https://github.com/dheerajpv/)
+- [Lebster](https://github.com/LebsterFace/)
+- Simon_ - whoops I don't know their GitHub (yet)
+- StrangeQuarkAL - GitHub account not connected to Discord
+
 ### Contributing
+
+**no.** this is my project and no one but me can contribute >:c
+
+but you are of course free to suggest edits, content, and revisions!
