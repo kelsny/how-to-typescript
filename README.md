@@ -986,6 +986,12 @@ I'll leave you with this new information to play around with! It's a lot to take
 // Common patterns amongst the type magic community
 ```
 
+# Part 5 - Do It Yourself
+
+```
+// Walk-through a few projects and showcase a few
+```
+
 # Part 4 - Extensions
 
 ```
