@@ -982,17 +982,71 @@ I'll leave you with this new information to play around with! It's a lot to take
 
 # Part 3 - Design & Develop
 
+Hey, what's the use of learning this, if there's nothing to... use it *for*?
+
+I saved this part till the end, because I believe you'd have a better time understanding the pattern and why it works, if you know each component that helped brought it to life first.
+A little like how you learnt design patterns after you found out that your spaghetti code was spaghetti :)
+
+## What's in a name
+
+You're familiar with TypeScript now, so you understand that this:
+
+```ts
+type Foo = { bar: string; };
+```
+
+is assignable to:
+
+```ts
+type Bar = { bar: string };
+```
+
+What are some use cases where we don't want this behaviour, and how would we fix it?
+
+This is the nominal typing problem. Currently, TypeScript only works with structural types, i.e, types whose structures are the same (like `Foo` and `Bar`).
+Nominal types come in handy, primarily for reducing typos/mix-ups with other types.
+Personally, I've never had to use them, but if this pattern exists, I guess most people do.
+
+The pattern is conceptually really simple: abuse the structural typing system.
+
+Simply have your regular type, and intersect it with another type. This type could be an enum or another interface with an obscure property (or symbol as a property).
+
+```ts
+enum _WithEnum { _ = "" }
+
+interface WithEnum_ = {}
+
+type WithEnum = WithEnum_ & _WithEnum;
+```
+
+```ts
+interface _WithInterface { _withInterface = "" }
+
+interface WithInterface_ {}
+
+type WithInterface - WithInterface_ & _WithInterface;
+```
+
+Branding type: `_xxx`, regular type: `xxx_`. 
+
+And tada! You've got a nominal typing system. You can't assign anything to `WithEnum` or `WithInterface` except itself (or if user happens to use the property on `_WithInterface`...).
+
+Nothing much here, although I think the enum style needs a little background.
+
+Why is there a member of the enum? If there wasn't a member, then it would have been inferred as a numeric enum instead of a string enum, and a numeric enum intersected with a string is `never`.
+Even though I'm not intersecting a string here, you should be careful!
+
 ```
 // Common patterns amongst the type magic community
 ```
 
-# Part 5 - Do It Yourself
+# Part 4 - Do It Yourself
 
 ```
 // Walk-through a few projects and showcase a few
 ```
 
-# Part 4 - Extensions
+# Part 5 - Extensions
 
 ```
 // Real-world scenarios and resources for further reading
