@@ -12,9 +12,9 @@ Formal · [Informal](./styles/informal) · [Uncensored](./styles/uncensored)
 
 In this book I'm going to assume you know the following:
 
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) - Fundamentals, ES6 features, and the standard library.
-- [TypeScript](http://www.typescriptlang.org/) - What it is, why use it, basic syntax.
-- [Node.js](https://nodejs.org/en/) - What it is, `global` and `process`, native modules' API.
+-   [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) - Fundamentals, ES6 features, and the standard library.
+-   [TypeScript](http://www.typescriptlang.org/) - What it is, why use it, basic syntax.
+-   [Node.js](https://nodejs.org/en/) - What it is, `global` and `process`, native modules' API.
 
 If you aren't quite caught up on these topics, do so now so that the book does not become confusing or overwhelming for you.
 I'd hate for someone to leave more confused than they started.
@@ -24,7 +24,7 @@ I'd hate for someone to leave more confused than they started.
 Ok, first I'd like to admit not everyone says "How do you do your type magic stuff?".
 Sometimes they give me a weird quizzical look and say, "What the f\*ck is the use of this?".
 Well the use is a great challenge for your logic and method for practicing actually useful TypeScript skills.
-Useful? Where'd that come from? 
+Useful? Where'd that come from?
 It's useful because if you can do type magic, you can apply your type magic to real-world scenarios!
 You'll see later throughout this book when we apply a new idea, concept, or pattern to something that might be used in production.
 
@@ -82,7 +82,7 @@ It's often used when there is no type to use, or can be used. An example would b
 
 ```ts
 function iNeverReturn() {
-  throw new Error(`This function does nothing.`);
+    throw new Error(`This function does nothing.`);
 }
 ```
 
@@ -90,7 +90,7 @@ The return type of `iNeverReturn` is inferred as `never`, since it will never re
 
 ```ts
 function iNeverReturn() {
-  process.exit(1);
+    process.exit(1);
 }
 ```
 
@@ -109,14 +109,14 @@ When you call a method on a primitive like a string, the string is temporarily w
 After that, the object is discarded and forgotten.
 
 ```js
-const primitive = "hello world";         // string
+const primitive = "hello world"; // string
 
 const boxed = new String("hello world"); // String
 
-const constructor = String;              // StringConstructor
+const constructor = String; // StringConstructor
 ```
 
-Keep in mind that there is a *really* big difference between a primitive, boxed primitive, and the boxed primitive constructor's types.
+Keep in mind that there is a _really_ big difference between a primitive, boxed primitive, and the boxed primitive constructor's types.
 A primitive is lowercase (`string`), boxed primitive is capitalized (`String`), and the constructor has `Constructor` appended to it (`StringConstructor`).
 
 There is a small difference with user-defined classes, however, and we'll get to that soon.
@@ -131,24 +131,24 @@ The syntax for defining object types is very similar to vanilla JavaScript:
 
 ```ts
 type MyType = {
-  foo: string;
-  bar: number;
-  baz: {
-    qux: boolean;
-  }
-}
+    foo: string;
+    bar: number;
+    baz: {
+        qux: boolean;
+    };
+};
 ```
 
 There is also the `object` type, which is also pretty taboo like `any`, because most things can be assigned to it.
 Another one like `object` is `{}`. And also like primitives, there is `Object` and `ObjectConstructor`.
 
-You *might* yse `ObjectConstructor` because of `Object`'s built-in methods, for example, `Object.entries` (in types, `ObjectConstructor["entries"]`).
+You _might_ yse `ObjectConstructor` because of `Object`'s built-in methods, for example, `Object.entries` (in types, `ObjectConstructor["entries"]`).
 
 Most of the times, however, you'll always use the standard syntax for defining object types.
 
 #### Literal types
 
-Small thing to note here: `"any-string-possible"` is a valid type. `0` is a valid type. 
+Small thing to note here: `"any-string-possible"` is a valid type. `0` is a valid type.
 In fact, all primitive literals are a valid type (except for a few, like `Infinity` and `NaN`).
 So when you see me using literals, I'm probably using them as a type literal.
 
@@ -177,12 +177,12 @@ Intersections allow the type system to have complex type compositions.
 type Foo = { foo: string };
 type Bar = { bar: string };
 
-type FooAndBar = Foo & Bar;                    // { foo: string; bar: string }
+type FooAndBar = Foo & Bar; // { foo: string; bar: string }
 
 type ImpossibleIntersection = string & number; // is never
 ```
 
-**Type of something (`typeof`)***
+**Type of something (`typeof`)\***
 
 Ok, this one's like the JavaScript `typeof` operator, but it retrieves the inferred or explicitly defined type of a value.
 
@@ -195,8 +195,9 @@ type TypeOfImportedThing = typeof Module;
 **Is subtype (`extends`)**
 
 This one isn't the `extends` like you use in a class, although it does relate to it in a way. No, `extends` can be used in one of 2 ways:
-- As a generic type constraint (you will see what I mean)
-- As a way to check if a type extends another type (if a type is a subtype of another type)
+
+-   As a generic type constraint (you will see what I mean)
+-   As a way to check if a type extends another type (if a type is a subtype of another type)
 
 This one takes a little more work to understand, so I'll leave it up to you if you want to learn all about it right now.
 
@@ -213,7 +214,7 @@ Let's first take a look at the basic syntax for annotating a function.
 
 ```ts
 function foo(bar: string, baz: number): boolean {
-  return Number(bar) === baz;
+    return Number(bar) === baz;
 }
 ```
 
@@ -225,8 +226,8 @@ What about a method on an object? TypeScript would show you the type (in a toolt
 
 ```ts
 type MyObj = {
-  foo(param1: string, param2: string): string;
-  bar: () => number;
+    foo(param1: string, param2: string): string;
+    bar: () => number;
 };
 ```
 
@@ -234,7 +235,7 @@ There's two different ways, because we've got two different functions (plain and
 Both ways are simply expressing a method on an object.
 
 Since JavaScript is such a hot mess of a language, you can change the `this` value of a function (`bind`, `call`, `apply`)!
-But how do you model this with TypeScript? 
+But how do you model this with TypeScript?
 TypeScript allows you to annotate the `this` type using `this` as the first parameter in a function:
 
 ```ts
@@ -275,21 +276,21 @@ Some languages also support tuples, namely Python. TypeScript supports ways to r
 Array types are declared in the same fashion as Java.
 
 ```ts
-type AliasForStringArray = string[]
+type AliasForStringArray = string[];
 ```
 
 Multi-dimensional
 
 ```ts
-type Array2D = number[][]
+type Array2D = number[][];
 ```
 
 Now for something that might blow you statically typed compiled language people's minds.
 
-It's important to think about `[]` as an *operator*. It takes its operand on the left and wraps it as an array type. In this way, we can compose complex array types:
+It's important to think about `[]` as an _operator_. It takes its operand on the left and wraps it as an array type. In this way, we can compose complex array types:
 
 ```ts
-type AReallyComplexArrayType = { key: ((string | number)[] & { depth: number })[] }[]
+type AReallyComplexArrayType = { key: ((string | number)[] & { depth: number })[] }[];
 ```
 
 Note the use of parentheses; `(string | number)[]` is definitely not the same as `string | number[]`.
@@ -340,13 +341,13 @@ In older versions of TypeScript, this was equivalent to adding `| undefined` to 
 
 ```ts
 type OptionalProp = {
-  foo?: string;
+    foo?: string;
 };
 ```
 
 **`-`**
 
-Oh another weird symbol? What's *this* one for?
+Oh another weird symbol? What's _this_ one for?
 I'll answer that. It's for removing `?` and `readonly` in an object. We'll see how this can be used in the next one.
 
 **`in`**
@@ -357,7 +358,7 @@ But basically, they're called mapped types because the type is computed by mappi
 
 ```ts
 type MappedNumbers = {
-  [K in "foo" | "bar"]: number;
+    [K in "foo" | "bar"]: number;
 }; // { foo: number; bar: number }
 ```
 
@@ -367,7 +368,7 @@ We can also use `keyof` here:
 type FooBar = { foo: string; bar: string };
 
 type MappedNumbers = {
-  [K in keyof FooBar]: number;
+    [K in keyof FooBar]: number;
 };
 ```
 
@@ -377,7 +378,7 @@ Along with `-` to remove optionality of properties, as well as readonly-ness (?)
 type FooBar = { readonly foo: string; readonly bar: string };
 
 type RequiredFooBar = {
-  -readonly [K in keyof FooBar]-?: string;
+    -readonly [K in keyof FooBar]-?: string;
 };
 ```
 
@@ -392,46 +393,46 @@ For example, a stack or queue. You can easily implement this in JavaScript/TypeS
 
 ```ts
 class Stack {
-  private array: any[] = [];
-  
-  constructor(...items: any[]) {
-    this.array.push(...items);
-  }
-  
-  push(item: any) {
-    return this.array.push(item);
-  }
-  
-  pop() {
-    return this.array.pop();
-  }
+    private array: any[] = [];
+
+    constructor(...items: any[]) {
+        this.array.push(...items);
+    }
+
+    push(item: any) {
+        return this.array.push(item);
+    }
+
+    pop() {
+        return this.array.pop();
+    }
 }
 ```
 
 Unfortunately, we have almost no choice but to use a taboo type like `any` (`unknown` will be very annoying to work with).
 
-We *could* make a specialized class only for numbers, strings, booleans, etc, but that's very inefficient, and how would the user define their own classes without creating one from scratch?
+We _could_ make a specialized class only for numbers, strings, booleans, etc, but that's very inefficient, and how would the user define their own classes without creating one from scratch?
 We can't make a factory function either... that would require generics.
 
-Which is why generics exist (no, not so we can make factory functions); so we can *generalize* something, whether it be a class, function, or interface.
+Which is why generics exist (no, not so we can make factory functions); so we can _generalize_ something, whether it be a class, function, or interface.
 
 The syntax for defining generics is much like Java. Use angle brackets, with the generic parameters in between them (TypeSript does not have the [diamond operator](https://en.wikipedia.org/wiki/Generics_in_Java#Diamond_operator)).
 
 ```ts
 class Stack<T> {
-  private array: T[] = [];
-  
-  constructor(...items: T[]) {
-    this.array.push(...items);
-  }
-  
-  push(item: T) {
-    return this.array.push(item);
-  }
-  
-  pop() {
-    return this.array.pop();
-  }
+    private array: T[] = [];
+
+    constructor(...items: T[]) {
+        this.array.push(...items);
+    }
+
+    push(item: T) {
+        return this.array.push(item);
+    }
+
+    pop() {
+        return this.array.pop();
+    }
 }
 ```
 
@@ -441,20 +442,18 @@ And we can also restrict the objects that this class will hold:
 ```ts
 class Stack<T extends { id: number; }> {
   private array: T[] = [];
-  
+
   ...
 }
 ```
 
 Let's take a look at another common example: the hashmap.
-Maps hold keys that *map* to a value.
+Maps hold keys that _map_ to a value.
 In Java, we have `Map<K, V>`, where `K` is the key's type and `V` is the value's type.
 TypeScript is exactly the same:
 
 ```ts
-const map = new Map<string, number>([
-  ["key", 123],
-]);
+const map = new Map<string, number>([["key", 123]]);
 
 map.get("key"); // returns number
 ```
@@ -463,8 +462,8 @@ Generics also apply to interfaces:
 
 ```ts
 interface StackLike<T> {
-  push(item: T): number;
-  pop(): T;
+    push(item: T): number;
+    pop(): T;
 }
 ```
 
@@ -472,8 +471,8 @@ And of course, we can still use `extends` to constrain the types:
 
 ```ts
 interface StackLike<T extends { id: number }> {
-  push(item: T): number;
-  pop(): T;
+    push(item: T): number;
+    pop(): T;
 }
 ```
 
@@ -495,7 +494,7 @@ Let's get started right away.
 
 When you're rapidly prototyping types, you might have to declare a few types, variables, or functions so you can properly test your types.
 However, some implementations or complex structures for variables might slow you down. What can you do to prevent this?
-Declaring *only* their types, so you do not have to spend time on actually making them work (i.e. don't have to write code to make the function do something).
+Declaring _only_ their types, so you do not have to spend time on actually making them work (i.e. don't have to write code to make the function do something).
 
 This is possible with the `declare` keyword.
 `declare` is a special keyword with many uses, including [Module Augmentation](typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation), but here we'll use it as a great way to tell TypeScript that some things are defined.
@@ -516,7 +515,7 @@ declare const augmentedVariable: MightBeNested<number>;
 console.log(augmentedVariabled); // in runtime (strict mode), this will give an error since augmentedVariable is not actually defined
 ```
 
-There is no variable defined here, but since we have used `declare`, TypeScript *thinks* there is a variable named `augmentedVariable`.
+There is no variable defined here, but since we have used `declare`, TypeScript _thinks_ there is a variable named `augmentedVariable`.
 
 Extending this to functions:
 
@@ -592,10 +591,10 @@ And just like that, we've created our first conditional type, albeit much more u
 Let's test it now.
 
 ```ts
-type T0 = IsString<string>;              // true
+type T0 = IsString<string>; // true
 type T1 = IsString<"yes i am a string">; // true
-type T2 = IsString<number>;              // false
-type T3 = IsString<123>;                 // false
+type T2 = IsString<number>; // false
+type T3 = IsString<123>; // false
 ```
 
 Nice, seems to work!
@@ -605,13 +604,13 @@ Since conditional types, are again, much like ternaries, you can chain/nest them
 Chaining:
 
 ```js
-condition1 ? expr1 : condition2 ? expr2 : expr3
+condition1 ? expr1 : condition2 ? expr2 : expr3;
 ```
 
 Nesting:
 
 ```js
-condition1 ? condition2 ? expr1 : expr2 : expr3
+condition1 ? (condition2 ? expr1 : expr2) : expr3;
 ```
 
 Or you can even do both at once (really hard to read, use if-elif-else instead).
@@ -624,7 +623,7 @@ condition1 ? true ? condition2 ? true : false
 Likewise, nesting represents an AND operator if you nest them like this:
 
 ```js
-condition1 ? condition2 ? true : false : false
+condition1 ? (condition2 ? true : false) : false;
 ```
 
 Keep these in mind, since they will be extremely useful later, when we practice logic gates with conditional types.
@@ -658,7 +657,7 @@ To not be really confusing when introducing this, I'll only put type literals in
 type Hello123 = `Hello${123}`;
 ```
 
-Wonderful. Works *just* like regular template literals. Same goes for any type that can be interpolated with a string (*cough* symbols *cough*).
+Wonderful. Works _just_ like regular template literals. Same goes for any type that can be interpolated with a string (_cough_ symbols _cough_).
 Ok, now for something that blew my mind at first... putting a f\*cking type in there instead (and yes, this is where I curse a lot more).
 
 ```ts
@@ -669,18 +668,18 @@ Right. Crazy. But what does this actually do? Well it allows any string that sta
 
 Some examples:
 
-- `Hello123`
-- `Hello0`
-- `Hello0.0`
-- `Hello0.123`
-- `Hello123.123`
+-   `Hello123`
+-   `Hello0`
+-   `Hello0.0`
+-   `Hello0.123`
+-   `Hello123.123`
 
 What if I but `string` instead of `number`?
 You guessed it. I can put any string after the `Hello`:
 
-- `HelloWorld`
-- `Hello world`
-- `Hello`
+-   `HelloWorld`
+-   `Hello world`
+-   `Hello`
 
 Make sure you see why these work.
 Now for boolean, right, you can only have `Hellotrue` or `Hellofalse`.
@@ -689,14 +688,14 @@ Ok, interesting. What about... a union of types...
 
 Let's first try `string | number`.
 
-Hmm, it  appears now, I can put any string or number after `Hello`.
+Hmm, it appears now, I can put any string or number after `Hello`.
 
 Pretty much expected, if you ask me. What's more interesting is putting a union of literal types.
 
 For example:
 
 ```ts
-type HelloPeople = `Hello ${"Alice" | "Bob" | "Charlie"}`
+type HelloPeople = `Hello ${"Alice" | "Bob" | "Charlie"}`;
 ```
 
 What's `HelloPeople`?
@@ -719,7 +718,7 @@ TypeScript is all about type safety, so we should be able to create custom strin
 Let's use this to create a type that checks if a string is numerical (i.e. checks if the string can be turned into a number using `Number`).
 
 ```ts
-type IsNumerical<S extends string> =  S extends `${bigint}` ? true : false;
+type IsNumerical<S extends string> = S extends `${bigint}` ? true : false;
 ```
 
 Here, we use `extends string` to make sure `S` is a string. Then we use a conditional type along with a template literal that includes a `bigint`.
@@ -795,7 +794,7 @@ Since the inferred type is now an identifier we can use... We can check if it ex
 Let's use this to create a type, `ReturnTypeExtendsFoo`, which will check if the function's return type extends, well, `Foo`.
 
 ```ts
-type ReturnTypeExtendsFoo<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? R extends Foo ? true : false : false;
+type ReturnTypeExtendsFoo<F extends (...args: any[]) => any> = F extends (...args: any[]) => infer R ? (R extends Foo ? true : false) : false;
 ```
 
 Now let's read this again. "If F extends a function, infer its return type. If the inferred return type extends Foo, true, otherwise, false. If F is not even a function, false."
@@ -824,23 +823,23 @@ Wow! It actually worked! As you can probably guess, it works the same for singul
 type GimmeYourFirstParameter<F extends (...args: any[]) => any> = F extends (arg: infer ArgType) => any ? ArgType : never;
 ```
 
-Nice! But hey, what's the fun in *only* inferring types of functions? Fortunately, we can do the same to strings and arrays.
+Nice! But hey, what's the fun in _only_ inferring types of functions? Fortunately, we can do the same to strings and arrays.
 Let's talk about strings first, since they might have a little more magic than you may think (arrays do, too, but I think their magic isn't as handy :D).
 
 ## Chapter 9 - Abusing inferences
 
-Alright, out with it, what do you think we can do with `infer`? What's the most cursed, abusive, and imaginative way, you can *possibly* use `infer`?
+Alright, out with it, what do you think we can do with `infer`? What's the most cursed, abusive, and imaginative way, you can _possibly_ use `infer`?
 
 To me, the first thing that comes to mind, are parsers. Made entirely out of TypeScript types, and only out of TypeScript types. Literal, f\*cking parsers.
 You name it. JSON parsers, YAML parsers, Markdown parsers, DSL parsers, text parsers, CSV parsers... Anything that can be parsed, can be parsed in TypeScript types.
 
-So hopefully that's got you a little excited about `infer`. Now let's actually see *how* you can do the same.
+So hopefully that's got you a little excited about `infer`. Now let's actually see _how_ you can do the same.
 
 Let's say we want to get a set of all the characters in a string. In plain JS, we'd probably do something like this:
 
 ```js
 function GetChars(string) {
-  return [...new Set(string.split(""))];
+    return [...new Set(string.split(""))];
 }
 ```
 
@@ -866,11 +865,11 @@ And guess what, it works exactly the same here as well! Props to the designers o
 ```ts
 type ABC = "a" | "b" | "c";
 
-type StartsWithABC<S extends string> = S extends `${ABC}${string}` ? S extends `${infer Letter}${string}` ? Letter : never : false;
+type StartsWithABC<S extends string> = S extends `${ABC}${string}` ? (S extends `${infer Letter}${string}` ? Letter : never) : false;
 ```
 
-Woah, not only can we tell if a string starts with a, b, or c, we can actually tell *which* one it was!
-Notice that I have put `never` in there, since `Letter` will *never* not be inferred, since S must start with a, b, or, c.
+Woah, not only can we tell if a string starts with a, b, or c, we can actually tell _which_ one it was!
+Notice that I have put `never` in there, since `Letter` will _never_ not be inferred, since S must start with a, b, or, c.
 Nice, nice, we can do some magic now. We can infer a letter in a string which is pretty cool, so now let's use it to get a set of all the characters in a string.
 
 ```ts
@@ -882,7 +881,7 @@ When it's used like this, `Letter` will be a single character, and `Rest` will b
 This way, there is no ambiguity involved and it flows pretty smoothly.
 
 We've got the first character and rest of the string now, what do we do with them?
-We want a set, so let's put a union of Letter in: 
+We want a set, so let's put a union of Letter in:
 
 ```ts
 type GetChars<S extends string> = S extends `${infer Letter}${infer Rest}` ? Letter | ... : ...;
@@ -917,12 +916,12 @@ I had so much time on my hands, I made a simple graphic in ASCII:
 example string
 _ --- T
  _____________ --- R
- 
+
 `${infer T}inbetween${infer R}`
 example inbetween string
 ________ --- T
            R --- _______
-           
+
 `ahead${infer T}inbetween${infer R}`
 ahead example inbetween string
      _________ --- T
@@ -946,7 +945,7 @@ That's pretty much it for arrays. Onto tuples (which is, safe to say, far mor ex
 If you're familiar with tuples, you probably know how to make one that contains one element:
 
 ```ts
-[MyType]
+[MyType];
 ```
 
 You know what time it is? `infer` time! Drop that sucker in and it'll work straight away!
@@ -982,7 +981,7 @@ I'll leave you with this new information to play around with! It's a lot to take
 
 # Part 3 - Design & Develop
 
-Hey, what's the use of learning this, if there's nothing to... use it *for*?
+Hey, what's the use of learning this, if there's nothing to... use it _for_?
 
 I saved this part till the end, because I believe you'd have a better time understanding the pattern and why it works, if you know each component that helped brought it to life first.
 A little like how you learnt design patterns after you found out that your spaghetti code was spaghetti :)
@@ -992,7 +991,7 @@ A little like how you learnt design patterns after you found out that your spagh
 You're familiar with TypeScript now, so you understand that this:
 
 ```ts
-type Foo = { bar: string; };
+type Foo = { bar: string };
 ```
 
 is assignable to:
@@ -1027,7 +1026,7 @@ interface WithInterface_ {}
 type WithInterface - WithInterface_ & _WithInterface;
 ```
 
-Branding type: `_xxx`, regular type: `xxx_`. 
+Branding type: `_xxx`, regular type: `xxx_`.
 
 And tada! You've got a nominal typing system. You can't assign anything to `WithEnum` or `WithInterface` except itself (or if user happens to use the property on `_WithInterface`...).
 
@@ -1035,6 +1034,90 @@ Nothing much here, although I think the enum style needs a little background.
 
 Why is there a member of the enum? If there wasn't a member, then it would have been inferred as a numeric enum instead of a string enum, and a numeric enum intersected with a string is `never`.
 Even though I'm not intersecting a string here, you should be careful!
+
+## Practicing legal discrimination
+
+Say you're implementing a protocol for some network, and each little "packet" contains data in JSON form.
+This JSON structure varies depending on the packet type, which is defined in the JSON.
+
+You could do:
+
+```ts
+interface Packet {
+    type: string;
+    [k: string]: string;
+}
+```
+
+but that doesn't seem very safe or useful.
+
+You try a union:
+
+```ts
+interface Packet {
+    type: "foo" | "bar";
+    [k: string]: string;
+}
+```
+
+Slightly better, but still not good enough.
+
+You could define all properties that can be used by the packet, and make them all optional, but then using the type would be a nightmare!
+It'd just be a series of nightmarish if statements and assertions.
+
+In desperation, you try a union type of all possible packet structures instead:
+
+```ts
+type Packet =
+    | {
+          type: "foo";
+          foo: string;
+      }
+    | {
+          type: "bar";
+          bar: string;
+      };
+```
+
+Then you stumble upon this:
+
+```ts
+if (packet.type === "foo") {
+    packet; // { type: "foo"; foo: string; }
+}
+```
+
+What? How? Well this is called a discriminated union, it works because TypeScript can narrow the union type to a single member because of that single common property.
+Like the name suggests, it's simply a union of types that have a common property, the discriminative property, that allows TypeScript to differentiate one from the other.
+
+Arguably, it's the most common and most useful.
+
+## Comprised
+
+You know, classes were some of the best things that happened to JavaScript.
+I'm not talking about the old weird `this` in function and prototype thing.
+I'm of course referring to the ES6 class "syntactic sugar".
+
+It really made OOP a more viable design pattern to use in JavaScript, which means we can apply some of the OOP design patterns to JavaScript.
+
+But hey, JavaScript is total bullsh\*t and that's why you're here right?
+Enough talk of the old way, let's jump into TypeScript.
+
+Since TypeScript extends JavaScript in a way, it of course, also has classes.
+
+Furthermore, since TypeScript is a statically typed language, you can easily use Java and C++ OOP design patterns with TypeScript.
+
+One word. Composition.
+
+You can compose a single object out of other objects, and since object types can be represented in TypeScript, we can compose a type out of other types.
+
+No, I'm not saying use unions and generics. We're gonna use `&` and recursive merging!
+
+<>
+
+```ts
+
+```
 
 ```
 // Common patterns amongst the type magic community
@@ -1056,13 +1139,13 @@ Even though I'm not intersecting a string here, you should be careful!
 
 ### Acknowledgements
 
-- [Me](https://github.com/cursorsdottsx/) - is that how this works?
-- [Cassie](https://github.com/BobobUnicorn/)
-- [Okku](https://github.com/0kku/)
-- [aero](https://github.com/dheerajpv/)
-- [Lebster](https://github.com/LebsterFace/)
-- Simon_ - whoops I don't know their GitHub (yet)
-- StrangeQuarkAL - GitHub account not connected to Discord
+-   [Me](https://github.com/cursorsdottsx/) - is that how this works?
+-   [Cassie](https://github.com/BobobUnicorn/)
+-   [Okku](https://github.com/0kku/)
+-   [aero](https://github.com/dheerajpv/)
+-   [Lebster](https://github.com/LebsterFace/)
+-   Simon\_ - whoops I don't know their GitHub (yet)
+-   StrangeQuarkAL - GitHub account not connected to Discord
 
 ### Contributing
 
