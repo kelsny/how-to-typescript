@@ -1092,32 +1092,9 @@ Like the name suggests, it's simply a union of types that have a common property
 
 Arguably, it's the most common and most useful.
 
-## Comprised
+## Disciplined
 
-You know, classes were some of the best things that happened to JavaScript.
-I'm not talking about the old weird `this` in function and prototype thing.
-I'm of course referring to the ES6 class "syntactic sugar".
-
-It really made OOP a more viable design pattern to use in JavaScript, which means we can apply some of the OOP design patterns to JavaScript.
-
-But hey, JavaScript is total bullsh\*t and that's why you're here right?
-Enough talk of the old way, let's jump into TypeScript.
-
-Since TypeScript extends JavaScript in a way, it of course, also has classes.
-
-Furthermore, since TypeScript is a statically typed language, you can easily use Java and C++ OOP design patterns with TypeScript.
-
-One word. Composition.
-
-You can compose a single object out of other objects, and since object types can be represented in TypeScript, we can compose a type out of other types.
-
-No, I'm not saying use unions and generics. We're gonna use `&` and recursive merging!
-
-<>
-
-```ts
-
-```
+(Self-validating parameters)
 
 ```
 // Common patterns amongst the type magic community
