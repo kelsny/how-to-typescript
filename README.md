@@ -1108,6 +1108,12 @@ Arguably, it's the most common and most useful.
 
 # Part 5 - Extensions
 
+## Resources
+
+- [Official TypeScript documentation](https://www.typescriptlang.org/docs/)
+
+    A good reference to TypeScript's type system. Does'nt go into depth into type abuse however.
+
 ```
 // Real-world scenarios and resources for further reading
 ```
