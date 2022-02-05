@@ -1120,6 +1120,13 @@ Arguably, it's the most common and most useful.
 
 ### Afterword
 
+Hi, thanks for taking a quick read of mine. Hopefully in this session you've been equipped with new knowledge, and now you
+can do a little type magic yourself. If you have trouble with something about it, please don't hesitate to ask me on Discord!
+
+Revision suggestions are welcome and any inaccuracies should be eliminated.
+
+Thank you and good luck, have fun!
+
 ### Acknowledgements
 
 -   [Me](https://github.com/cursorsdottsx/) - is that how this works?
