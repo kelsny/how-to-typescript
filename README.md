@@ -295,7 +295,7 @@ type AReallyComplexArrayType = { key: ((string | number)[] & { depth: number })[
 
 Note the use of parentheses; `(string | number)[]` is definitely not the same as `string | number[]`.
 
-Tuples are declared in a different fashion. They look like array literals in code, but instead of values, its types in their place.
+Tuples are declared in a different fashion. They look like array literals in code, but instead of values, it's types in their place.
 
 ```ts
 type Position = [number, number];
@@ -1113,10 +1113,10 @@ Arguably, it's the most common and most useful.
 - [Official TypeScript documentation](https://www.typescriptlang.org/docs/)
 
     A good reference to TypeScript's type system. Does'nt go into depth into type abuse however.
+    
+- [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 
-```
-// Real-world scenarios and resources for further reading
-```
+    Deeper dive into the semantics and behaviour of the type system.
 
 ### Afterword
 
