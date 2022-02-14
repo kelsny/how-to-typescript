@@ -1013,7 +1013,7 @@ Simply have your regular type, and intersect it with another type. This type cou
 ```ts
 enum _WithEnum { _ = "" }
 
-interface WithEnum_ = {}
+interface WithEnum_ {}
 
 type WithEnum = WithEnum_ & _WithEnum;
 ```
@@ -1112,7 +1112,7 @@ Arguably, it's the most common and most useful.
 
 - [Official TypeScript documentation](https://www.typescriptlang.org/docs/)
 
-    A good reference to TypeScript's type system. Does'nt go into depth into type abuse however.
+    A good reference to TypeScript's type system. Doesn't go into depth into type abuse however.
     
 - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
 
