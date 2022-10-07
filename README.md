@@ -1,3 +1,5 @@
+### Archived in favor of https://type-level-typescript.com/
+
 English · [中文](./translations/zh)
 
 Formal · [Informal](./styles/informal) · [Uncensored](./styles/uncensored)
